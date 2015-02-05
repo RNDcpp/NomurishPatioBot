@@ -1,5 +1,6 @@
 require './bot'
+require './lib/twitter_api'
+require 'twitter'
 
-Bot.init 'BotConfig.yaml'
-Bot.run
-
+TwitterAPI.init('BotConfig.yaml')
+TwitterAPI.connect_streem

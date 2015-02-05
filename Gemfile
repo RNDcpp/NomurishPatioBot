@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
-gem 'tweetstream'
-gem 'foreman'
+gem 'oauth'
+gem 'twitter'
 gem 'nokogiri', '>= 1.6'
