@@ -1,40 +1,36 @@
+require './lib/nomlish_api'
 require 'yaml'
-require 'tweetstream'
-module Bot
-  class << self
+class Bot
 
-    def init(file_name)
-      @@CONFIG = YAML.load_file file_name
-      TweetStream.configure do |config|
-        config.consumer_key        = @@CONFIG['consumer_key']
-        config.consumer_secret     = @@CONFIG['consumer_key_secret']
-        config.oauth_token         = @@CONFIG['oauth_token']
-        config.oauth_token_secret  = @@CONFIG['oauth_token_secret']
-        config.auth_method         = :oauth
+  def initialize(config_file:'BotConfig.yml',follower_list:'Followers.yml')
+    @streaming_proc = proc do
+      begin
+        puts "start"
+        loop do
+          sleep 1
+        end
+      ensure
+        # Bot stop process
+        puts "end"
       end
     end
-
-    def run
-      if @@CONFIG
-        client = TweetStream::Client.new
-        client.sample do |status|
-          puts " #{status.user.name} -> #{status.text}\n\n" if validate_tweet
-        end
-
-        client.on_error do |message|
-          $stderr.puts "[ERROR] #{message}"
-        end
-
-        client.on_reconnect do |timeout , retires|
-          $stderr.puts "[RECONNECT] timeout: #{timeout} , retires: #{retires}"
-        end
-
-      end
-    end
+    @streaming_thread = Thread.new(&@streaming_proc)
   end
 
-  def validate_tweet
-    return true
+  def alive
+    @streaming_thread.alive?
   end
-  private:validate_tweet
+
+  def stop!
+    @streaming_thread.kill
+  end
+
+  def run!
+    @streaming_thread = Thread.new(&@streaming_proc) unless alive
+  end
+
+  def reload
+    stop!
+    run!
+  end
 end

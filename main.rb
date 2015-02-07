@@ -1,5 +1,26 @@
+require 'sinatra'
 require './bot'
+#ConsoleScreenProcess
+class Console < Sinatra::Base
+@@Bot = Bot.new
+  get '/' do
+    @bot=@@Bot
+    erb :index
+  end
 
-Bot.init 'BotConfig.yaml'
-Bot.run
+  get '/edit' do
+    erb :edit
+  end
 
+  post '/stop' do
+    @@Bot.stop!
+    redirect '/'
+  end
+
+  post '/run' do
+    @@Bot.run!
+    redirect '/'
+  end
+end
+
+Console.run!

@@ -1,0 +1,35 @@
+body{
+background-color: #b8daa6;
+}
+.wrapper{
+  width: 1000px;
+  text-align: center;
+  margin: 0 auto;
+  background-color: #eef5eb;
+  min-height:1000px;
+  border-radius: 15px;
+}
+.header{
+  width: 1000px;
+  background-color: #a9ff7d;
+  border-radius: 15px;
+}
+.page_title_area{
+  padding-top: 20px;
+  margin-bottom: 20px;
+}
+span.page_title{
+  color: #ff9500;
+  font-size: 32px;
+}
+.page_caption_area{
+  padding: 10px 10px 20px 10px;
+  background-color: #53eb06;
+  border-radius: 15px;
+}
+span.page_caption{
+  color: #f57900;
+  font-size: 20px;
+}
+
+
