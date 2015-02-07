@@ -1,2 +1,16 @@
 <h1>This Page is NPB Index</h1>
 <marquee> <h3 >Facking Cute Patio !!</h3> </marquee>
+<h2> Now NPB is <%= (@bot.alive)?'alive':'dead' %></h2>
+<p>change a state of NPB</p>
+<div class="state_change_panel">
+  <div style="display:inline-block">
+    <form action="/run" method="post">
+      <input type="submit" value="Run!" />
+    </form>
+  </div>
+  <div style="display:inline-block">
+    <form action="/stop" method="post">
+      <input type="submit" value="Stop!" />
+    </form>
+  </div>
+</div>

@@ -1,24 +1,10 @@
 require 'sinatra'
-#require './bot'
-require './lib/nomlish_api'
-
-$streaming = proc do
-  begin
-    # Bot.init 'BotConfig.yaml'
-    puts "start"
-    loop do
-      sleep 1
-    end
-  ensure
-    # Bot stop process
-    puts "end"
-  end
-end
-$streaming_thread = Thread.new(&$streaming)
-
+require './bot'
 #ConsoleScreenProcess
 class Console < Sinatra::Base
+@@Bot = Bot.new
   get '/' do
+    @bot=@@Bot
     erb :index
   end
 
@@ -27,14 +13,14 @@ class Console < Sinatra::Base
   end
 
   post '/stop' do
-    $streaming_thread.kill
+    @@Bot.stop!
     redirect '/'
   end
 
   post '/run' do
-    $streaming_thread = Thread.new(&$streaming) unless $streaming_thread.alive?
+    @@Bot.run!
     redirect '/'
   end
 end
 
-#Console.run!
+Console.run!
