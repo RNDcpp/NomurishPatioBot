@@ -1,20 +1,21 @@
 require 'sinatra'
 #require './bot'
 require './lib/nomlish_api'
-begin
-  STREAMING = Thread.new do
-    Thread.handle_interrupt(RuntimeError=>:on_blocking) do
-#      Bot.init 'BotConfig.yaml'
-      if Thread.pending_interrupt?
-        sleep 1
-        #TODO TwitterBot processe will be written here
-      end
+
+$streaming = proc do
+  begin
+    # Bot.init 'BotConfig.yaml'
+    puts "start"
+    loop do
+      sleep 1
     end
+  ensure
+    # Bot stop process
+    puts "end"
   end
-  STREAMING.join
-rescue
-  #TODO TwitterBot send error
 end
+$streaming_thread = Thread.new(&$streaming)
+
 #ConsoleScreenProcess
 class Console < Sinatra::Base
   get '/' do
@@ -26,13 +27,14 @@ class Console < Sinatra::Base
   end
 
   post '/stop' do
-    STREAMING.raise
-    redirect back
+    $streaming_thread.kill
+    redirect '/'
   end
 
   post '/run' do
-    STREAMING.run
-    redirect back
+    $streaming_thread = Thread.new(&$streaming) unless $streaming_thread.alive?
+    redirect '/'
   end
 end
-Console.run!
+
+#Console.run!
