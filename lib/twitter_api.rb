@@ -3,7 +3,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'oauth'
-#require 'twitter'
+require 'yaml'
 
 module TwitterAPI
   TWEET_STREAM = URI.parse('https://userstream.twitter.com/1.1/user.json?track=RND_cpp')
