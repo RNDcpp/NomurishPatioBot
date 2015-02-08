@@ -3,6 +3,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'oauth'
+#require 'twitter'
 
 module TwitterAPI
   TWEET_STREAM = URI.parse('https://userstream.twitter.com/1.1/user.json?track=RND_cpp')
@@ -39,15 +40,9 @@ module TwitterAPI
           config_file['oauth_token'],
           config_file['oauth_token_secret']
         )
-        @@client = Twitter::REST::Client.new do |config|
-          config.consumer_key        = config_file['consumer_key']
-          config.consumer_secret     = config_file['consumer_key_secret']
-          config.access_token        = config_file['oauth_token']
-          config.access_token_secret = config_file['oauth_token_secret']
-        end
         p 'TwitterAPI init'
     end
-    def connect_streem
+    def connect_stream
       https = Net::HTTP.new(TWEET_STREAM.host,TWEET_STREAM.port)
       https.use_ssl = true
       https.ca_file = './ca_file/userstream.twitter.com'
@@ -78,6 +73,9 @@ module TwitterAPI
     end
     def find_by_user_name(user_name)
       @@client.user(user_name)
+    end
+    def update(text)
+      p @@access_token.post('https://api.twitter.com/1.1/statuses/update.json',{'status'=>text})
     end
   end
 end

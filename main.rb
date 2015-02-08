@@ -1,6 +1,25 @@
+require 'sinatra'
 require './bot'
-require './lib/twitter_api'
-require 'twitter'
+#ConsoleScreenProcess
+class Console < Sinatra::Base
+@@Bot = Bot.new
+  get '/' do
+    @bot=@@Bot
+    erb :index
+  end
 
-TwitterAPI.init('BotConfig.yaml')
-TwitterAPI.connect_streem
+  get '/edit' do
+    erb :edit
+  end
+
+  post '/stop' do
+    @@Bot.stop!
+    redirect '/'
+  end
+
+  post '/run' do
+    @@Bot.run!
+    redirect '/'
+  end
+end
+Console.run!
