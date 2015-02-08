@@ -1,5 +1,5 @@
 require 'yaml'
-require 'tweetstream'
+require './lib/twitter_api'
 module Bot
   class << self
 

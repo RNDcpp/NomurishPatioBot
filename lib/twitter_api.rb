@@ -6,6 +6,26 @@ require 'oauth'
 
 module TwitterAPI
   TWEET_STREAM = URI.parse('https://userstream.twitter.com/1.1/user.json?track=RND_cpp')
+  class User
+  attr_accessor :name, :screen_name
+    def initialize(json)
+      @name = json['name']
+      @screen_name = json['screen_name']
+    end
+  end
+  class Status
+  attr_accessor :user, :text
+    def initialize(json)
+      @user = User.new(json['user'])
+      @text = json['text']
+    end
+    def self.set_filter(&block)
+      @@filter_block = block
+    end
+    def filter
+      @@filter_block.call(self)
+    end
+  end
   class << self
     def init(file_name)
       config_file = YAML.load_file file_name
@@ -48,9 +68,7 @@ module TwitterAPI
               begin
                 buf.sub!(line,"")
                 line.strip!
-                status = JSON.parse(line) rescue next
-                user = status['user']
-                puts "#{user['screen_name']}:#{status['text']}"
+                yield(Status.new(JSON.parse(line))) rescue next
               rescue
               end
             end
