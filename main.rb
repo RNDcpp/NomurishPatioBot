@@ -22,5 +22,4 @@ class Console < Sinatra::Base
     redirect '/'
   end
 end
-
 Console.run!
