@@ -2,6 +2,7 @@ require 'sinatra'
 require './bot'
 #ConsoleScreenProcess
 class Console < Sinatra::Base
+set :environment, :production
 @@Bot = Bot.new
   get '/' do
     @bot=@@Bot

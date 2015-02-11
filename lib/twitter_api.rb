@@ -15,10 +15,11 @@ module TwitterAPI
     end
   end
   class Status
-  attr_accessor :user, :text
+  attr_accessor :user, :text,:retweet
     def initialize(json)
       @user = User.new(json['user'])
       @text = json['text']
+      @retweet = json['retweeted_status']
     end
     def self.set_filter(&block)
       @@filter_block = block
@@ -52,7 +53,11 @@ module TwitterAPI
         p 'start https'
         request = Net::HTTP::Get.new(TWEET_STREAM.request_uri)
         request["User-Agent"] = 'Nomurish Patio Bot'
-        request.oauth!(https,@@consumer,@@access_token)
+        begin 
+          request.oauth!(https,@@consumer,@@access_token)
+        rescue => e
+          p e
+        end
         buf = ''
         https.request(request)do |response|
           raise "Response is not Chunked \n #{response.read_body}" unless response.chunked?
