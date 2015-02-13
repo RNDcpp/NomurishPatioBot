@@ -2,11 +2,13 @@
 require './lib/nomlish_api'
 require './lib/twitter_api'
 require './lib/nomlish_api'
+require './lib/bot_logger'
 require 'yaml'
 require 'pp'
 class Bot
 
   def initialize(config_file:'BotConfig.yml',follower_list:'Followers.yml')
+    BotLog.init
     f_list = YAML.load_file follower_list
     pp f_list
     TwitterAPI::Status.set_filter do |status|
@@ -14,27 +16,28 @@ class Bot
     end
     @streaming_proc = proc do
       begin
-        puts "start"
+        BotLog.message.debug 'start'
         TwitterAPI.init(config_file)
         TwitterAPI.connect_stream do |status|
-          puts 'tweet:'
-          puts "#{status.user.screen_name}:#{status.text}"
+          BotLog.message.debug 'tweet:'
+          BotLog.tweet.debug "#{status.user.screen_name}:#{status.text}"
           if status.filter
-            puts 'tweet translate'
-            p text = NomlishAPI.translate(status.text)
+            BotLog.message.debug 'tweet translate'
+            text = NomlishAPI.translate(status.text)
+            BotLog.message.debug text
             if text.length <= 140
                begin 
                  TwitterAPI.update(text)
-                 puts 'tweet!'
+                 BotLog.message.debug 'tweet!'
                rescue
-                 p 'tweet update error'
+                 BotLog.errors.debug 'tweet update error'
                end
             end
           end
         end
       ensure
         # Bot stop process
-        puts "end"
+        BotLog.message.debug "end"
       end
     end
     @streaming_thread = Thread.new(&@streaming_proc)
