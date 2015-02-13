@@ -22,6 +22,10 @@ set :environment, :production
     @tweet = File.read('./log/response.log')
   end
 
+  get '/log/errors' do
+    @tweet = File.read('./log/errors.log')
+  end
+
 
   get '/edit' do
     erb :edit
