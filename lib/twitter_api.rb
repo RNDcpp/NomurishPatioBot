@@ -65,7 +65,6 @@ module TwitterAPI
             raise "Response is not Chunked \n #{response.read_body}" unless response.chunked?
             response.read_body do |chunk|
               BotLog.message.debug 'response chunk'
-              buf.clear
               buf << chunk
               while(line = buf[/.+?(\r\n)+/m]) != nil
                 begin

@@ -4,26 +4,31 @@ require './bot'
 #ConsoleScreenProcess
 class Console < Sinatra::Base
 set :environment, :production
+set :port,6664
 @@Bot = Bot.new
   get '/' do
     @bot=@@Bot
     erb :index
   end
 
-  get '/log/tweet' do
-    @tweet = File.read('./log/tweet.log')
+  get '/tweetlog' do
+    @log = File.read('./logger/tweet.log')
+    erb :log
   end
 
-  get '/log/message' do
-    @tweet = File.read('./log/message.log')
+  get '/messagelog' do
+    @log = File.read('./logger/message.log')
+    erb :log
   end
 
-  get '/log/response' do
-    @tweet = File.read('./log/response.log')
+  get '/responselog' do
+    @log = File.read('./logger/response.log')
+    erb :log
   end
 
-  get '/log/errors' do
-    @tweet = File.read('./log/errors.log')
+  get '/errors' do
+    @log = File.read('./logger/errors.log')
+    erb :log
   end
 
 
@@ -41,4 +46,3 @@ set :environment, :production
     redirect '/'
   end
 end
-Console.run!
