@@ -85,7 +85,8 @@ module TwitterAPI
       @@client.user(user_name)
     end
     def update(text,id)
-      BotLog.message.debug @@access_token.post('https://api.twitter.com/1.1/statuses/update.json',{'status'=>text,'in_reply_to_status_id'=>id})
+      BotLog.message.debug response = @@access_token.post('https://api.twitter.com/1.1/statuses/update.json',{'status'=>text,'in_reply_to_status_id'=>id})
+      Status.new(JSON.parse(response.body)) rescue response
     end
   end
 end

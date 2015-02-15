@@ -4,6 +4,7 @@ require './lib/twitter_api'
 require './lib/nomlish_api'
 require './lib/bot_logger'
 require 'yaml'
+require 'json'
 require 'pp'
 class Bot
 
@@ -27,7 +28,10 @@ class Bot
             BotLog.message.debug text
             if text.length <= 140
                begin 
-                 TwitterAPI.update(text,status.id)
+                 response_status = TwitterAPI.update(status.text,nil)
+                 res_id = response_status.id rescue res_id = nil
+                 BotLog.message.debug res_id
+                 TwitterAPI.update(text,res_id)
                  BotLog.message.debug 'tweet!'
                rescue => e
                  BotLog.errors.debug e
