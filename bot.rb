@@ -27,10 +27,11 @@ class Bot
             BotLog.message.debug text
             if text.length <= 140
                begin 
-                 TwitterAPI.update(text)
+                 TwitterAPI.update(text,status.id)
                  BotLog.message.debug 'tweet!'
-               rescue
-                 BotLog.errors.debug 'tweet update error'
+               rescue => e
+                 BotLog.errors.debug e
+                 BotLog.message.debug 'tweet update error'
                end
             end
           end

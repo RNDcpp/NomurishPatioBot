@@ -16,8 +16,9 @@ module TwitterAPI
     end
   end
   class Status
-  attr_accessor :user, :text,:retweet
+  attr_accessor :user, :text,:retweet ,:id
     def initialize(json)
+      @id = json['id']
       @user = User.new(json['user'])
       @text = json['text']
       @retweet = json['retweeted_status']
@@ -53,7 +54,8 @@ module TwitterAPI
       https.start do |https|
         BotLog.message.debug 'start https'
         request = Net::HTTP::Get.new(TWEET_STREAM.request_uri)
-        request["User-Agent"] = 'Nomurish Patio Bot'
+        request['User-Agent'] = 'Nomurish Patio Bot'
+        request['Accept-Encoding']='identity'
         begin 
           request.oauth!(https,@@consumer,@@access_token)
         rescue => e
@@ -82,8 +84,8 @@ module TwitterAPI
     def find_by_user_name(user_name)
       @@client.user(user_name)
     end
-    def update(text)
-      BotLog.message.debug @@access_token.post('https://api.twitter.com/1.1/statuses/update.json',{'status'=>text})
+    def update(text,id)
+      BotLog.message.debug @@access_token.post('https://api.twitter.com/1.1/statuses/update.json',{'status'=>text,'in_reply_to_status_id'=>id})
     end
   end
 end
