@@ -5,6 +5,7 @@ require 'uri'
 require 'json'
 require 'oauth'
 require 'yaml'
+
 module TwitterAPI
   TWEET_STREAM = URI.parse('https://userstream.twitter.com/1.1/user.json?track=RND_cpp')
   class User
@@ -57,26 +58,23 @@ module TwitterAPI
           request.oauth!(https,@@consumer,@@access_token)
         rescue => e
           BotLog.errors.debug e
+          raise e
         end
         buf = ''
         https.request(request)do |response|
-          begin
-            BotLog.response.debug response.read_body 
-            raise "Response is not Chunked \n #{response.read_body}" unless response.chunked?
-            response.read_body do |chunk|
-              BotLog.message.debug 'response chunk'
-              buf << chunk
-              while(line = buf[/.+?(\r\n)+/m]) != nil
-                begin
-                  buf.sub!(line,"")
-                  line.strip!
-                  yield(Status.new(JSON.parse(line))) rescue next
-                rescue
-                end
+          BotLog.response.debug response
+          raise "Response is not Chunked \n #{response.read_body}" unless response.chunked?
+          response.read_body do |chunk|
+            BotLog.message.debug 'response chunk'
+            buf << chunk
+            while(line = buf[/.+?(\r\n)+/m]) != nil
+              begin
+                buf.sub!(line,"")
+                line.strip!
+                yield(Status.new(JSON.parse(line))) rescue next
+              rescue
               end
             end
-          rescue => e
-            BotLog.errors.debug e
           end
         end
       end
@@ -85,7 +83,7 @@ module TwitterAPI
       @@client.user(user_name)
     end
     def update(text)
-      BotLog.message.debug( @@access_token.post('https://api.twitter.com/1.1/statuses/update.json',{'status'=>text}) )
+      BotLog.message.debug @@access_token.post('https://api.twitter.com/1.1/statuses/update.json',{'status'=>text})
     end
   end
 end
