@@ -26,12 +26,10 @@ class Bot
             BotLog.message.debug 'tweet translate'
             text = NomlishAPI.translate(status.text)
             BotLog.message.debug text
-            if text.length <= 140
+            if text.length <= 120
                begin 
-                 response_status = TwitterAPI.update(status.text,nil)
-                 res_id = response_status.id rescue res_id = nil
-                 BotLog.message.debug res_id
-                 TwitterAPI.update(text,res_id)
+                 text<<"\n https://twitter.com/#{status.user.screen_name}/status/#{status.id}"
+                 TwitterAPI.update(text,nil)
                  BotLog.message.debug 'tweet!'
                rescue => e
                  BotLog.errors.debug e
