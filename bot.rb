@@ -21,7 +21,7 @@ attr_accessor :f_list
         BotLog.message.debug 'start'
         TwitterAPI.init(config_file)
         loop do
-          TwitterAPI.connect_stream @bot_proc
+          TwitterAPI.connect_stream(&@bot_proc)
         end
       rescue=>e
         BotLog.errors.debug e.message
