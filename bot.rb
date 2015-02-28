@@ -23,8 +23,9 @@ attr_accessor :f_list
         loop do
           TwitterAPI.connect_stream @bot_proc
         end
-      ensure=>e
+      rescue=>e
         BotLog.errors.debug e.message
+      ensure
         # Bot stop process
         BotLog.message.debug "end"
       end
