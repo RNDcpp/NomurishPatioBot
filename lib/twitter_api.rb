@@ -59,7 +59,7 @@ module TwitterAPI
         begin 
           request.oauth!(https,@@consumer,@@access_token)
         rescue => e
-          BotLog.errors.debug e
+          BotLog.errors.debug e.message
           raise e
         end
         buf = ''
@@ -74,7 +74,8 @@ module TwitterAPI
                 buf.sub!(line,"")
                 line.strip!
                 yield(Status.new(JSON.parse(line))) rescue next
-              rescue
+              rescue=>e
+                BotLog.errors.debug e.message
               end
             end
           end

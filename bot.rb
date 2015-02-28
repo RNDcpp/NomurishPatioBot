@@ -7,36 +7,21 @@ require 'yaml'
 require 'json'
 require 'pp'
 class Bot
-
+attr_accessor :f_list
   def initialize(config_file:'BotConfig.yml',follower_list:'Followers.yml')
     BotLog.init
-    f_list = YAML.load_file follower_list
-    pp f_list
-    TwitterAPI::Status.set_filter do |status|
-      (f_list.include?(status.user.screen_name))and(!status.text.include?('@'))and(status.retweet==nil)
+    @f_list = YAML.load_file follower_list
+    pp @f_list
+    @bot_proc = proc do |status|
+      BotLog.message.debug 'tweet:'
+      BotLog.tweet.debug "#{status.user.screen_name}:#{status.text}"
     end
     @streaming_proc = proc do
       begin
         BotLog.message.debug 'start'
         TwitterAPI.init(config_file)
-        TwitterAPI.connect_stream do |status|
-          BotLog.message.debug 'tweet:'
-          BotLog.tweet.debug "#{status.user.screen_name}:#{status.text}"
-          if status.filter
-            BotLog.message.debug 'tweet translate'
-            text = NomlishAPI.translate(status.text)
-            BotLog.message.debug text
-            if text.length <= 120
-               begin 
-                 text<<"\n https://twitter.com/#{status.user.screen_name}/status/#{status.id}"
-                 TwitterAPI.update(text,nil)
-                 BotLog.message.debug 'tweet!'
-               rescue => e
-                 BotLog.errors.debug e
-                 BotLog.message.debug 'tweet update error'
-               end
-            end
-          end
+        loop do
+          TwitterAPI.connect_stream @bot_proc
         end
       ensure
         # Bot stop process
@@ -44,6 +29,10 @@ class Bot
       end
     end
     @streaming_thread = Thread.new(&@streaming_proc)
+  end
+
+  def set_proc(&proc)
+    @bot_proc = proc
   end
 
   def alive

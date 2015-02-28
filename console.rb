@@ -5,6 +5,9 @@ require './bot'
 class Console < Sinatra::Base
 set :environment, :production
 set :port,6664
+def self.set_bot(bot)
+  @@Bot = bot
+end
 @@Bot = Bot.new
   get '/' do
     @bot=@@Bot
