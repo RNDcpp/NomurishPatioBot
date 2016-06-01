@@ -12,7 +12,7 @@ patio.set_proc{|status|
         BotLog.message.debug text
         if text.length <= 120
            begin 
-             text<<"\n https://twitter.com/#{status.user.screen_name}/status/#{status.id}"
+             #text<<"\n https://twitter.com/#{status.user.screen_name}/status/#{status.id}"
              TwitterAPI.update(text,nil)
              BotLog.message.debug 'tweet!'
            rescue => e
