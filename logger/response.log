@@ -1,0 +1,2 @@
+D, [2016-06-01T20:03:44.325556 #730] DEBUG -- : #<Net::HTTPOK 200 OK readbody=false>
+D, [2016-06-01T20:03:45.358027 #730] DEBUG -- : #<Net::HTTPClientError 420 Enhance Your Calm readbody=false>

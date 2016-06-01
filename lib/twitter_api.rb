@@ -48,8 +48,7 @@ module TwitterAPI
     def connect_stream
       https = Net::HTTP.new(TWEET_STREAM.host,TWEET_STREAM.port)
       https.use_ssl = true
-      https.ca_file = './ca_file/userstream.twitter.com'
-      https.verify_mode = OpenSSL::SSL::VERIFY_PEER
+      https.verify_mode = OpenSSL::SSL::VERIFY_NONE
       https.verify_depth = 5
       https.start do |https|
         BotLog.message.debug 'start https'

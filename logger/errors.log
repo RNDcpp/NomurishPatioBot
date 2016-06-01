@@ -1,2 +1,3 @@
-D, [2015-03-01T04:54:39.180330 #10785] DEBUG -- : (BotConfig.yml): did not find expected alphabetic or numeric character while scanning an alias at line 1 column 22
-D, [2015-03-01T04:54:39.180849 #10785] DEBUG -- : (BotConfig.yml): did not find expected alphabetic or numeric character while scanning an alias at line 1 column 22
+D, [2016-06-01T20:03:45.358630 #730] DEBUG -- : Response is not Chunked 
+ Exceeded connection limit for user
+

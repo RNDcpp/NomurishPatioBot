@@ -19,8 +19,8 @@ module NomlishAPI
         'before' => msg,
         'level'  => level.to_s,
         'after'  => '',
-        'option' => option.delete('_'),
-        'trans_btn' => '　　翻　訳　　',
+        'options' => option.delete('_'),
+        'transbtn' => '翻訳',
         'new_japanese' => '',
         'new_nomrish'  => ''
       }
